@@ -29,6 +29,6 @@ public class ContactInquiry {
     @Column(nullable = false, length = 1000)
     private String message;
 
-    @Column(nullable = false)
+    @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 }
