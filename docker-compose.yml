@@ -1,0 +1,36 @@
+version: "3.9"
+
+services:
+
+  postgres:
+    image: postgres:16
+    container_name: vimaltech-postgres
+    environment:
+      POSTGRES_DB: contactdb
+      POSTGRES_USER: contactuser
+      POSTGRES_PASSWORD: contactpass
+      TZ: Asia/Kolkata
+    ports:
+      - "5432:5432"
+    volumes:
+      - vimaltech_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U contactuser -d contactdb" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  contact-api:
+    build: .
+    container_name: vimaltech-contact-api
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+    restart: unless-stopped
+
+volumes:
+  vimaltech_pgdata:
