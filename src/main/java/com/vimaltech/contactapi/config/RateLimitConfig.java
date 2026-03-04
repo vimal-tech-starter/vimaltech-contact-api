@@ -11,11 +11,17 @@ import org.springframework.context.annotation.Profile;
 public class RateLimitConfig {
 
     @Bean
-    public FilterRegistrationBean<IpRateLimitFilter> rateLimitFilterRegistration(
-            IpRateLimitFilter filter) {
+    public IpRateLimitFilter ipRateLimitFilter() {
+        return new IpRateLimitFilter();
+    }
 
-        FilterRegistrationBean<IpRateLimitFilter> registration = new FilterRegistrationBean<>();
-        registration.setFilter(filter);
+    @Bean
+    public FilterRegistrationBean<IpRateLimitFilter> rateLimitFilterRegistration() {
+
+        FilterRegistrationBean<IpRateLimitFilter> registration =
+                new FilterRegistrationBean<>();
+
+        registration.setFilter(ipRateLimitFilter());
         registration.addUrlPatterns("/*");
         registration.setOrder(1);
 
